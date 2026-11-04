@@ -9,6 +9,7 @@ on:
     types: [closed]
     branches:
       - main
+      - dev
 
 permissions:
   contents: read

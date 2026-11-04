@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - dev
     paths:
       - 'overlay/**'
       - '.github/workflows/sync-overlay.yml'
