@@ -83,6 +83,85 @@
       "verify_sig_skip_reason": "stream does not use signature verification",
       "verify_sig_testable": false
     },
+    "1.100.37": {
+      "distfiles": {
+        "brave-browser-nightly_1.100.37_amd64.deb": {
+          "blake2b": "2a257c3d1cd1389ce6f4cb884d75d0315b262d77a8ccffdc9e6fc7664e242330b4a3e269ba780c42b0c538a7429789ac9a8bdb6b80b28a0b424eaff130d2241b",
+          "filename": "brave-browser-nightly_1.100.37_amd64.deb",
+          "sha256": "a5b3ed7715931f108956516b4b1f746af82d332797f10f8cd8225763fa49261d",
+          "sha512": "b5a1815c7c02ff2237878fbc708f20024ea904446530a8bc7af119f9b637da4f7cafbb9a6ccbf7a8957e4fc0a58daf05779998704e0aaeabd442f0c09dc4dd36",
+          "size": 153250476,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_amd64.deb"
+        },
+        "brave-browser-nightly_1.100.37_amd64.deb.sha256": {
+          "blake2b": "4dd95a1206db38aabe0da5ff2ce31cc3513ef771f87156d5e3d8d9fe578f83e93110977fd529208cc299466932e862de3922e4e8ac4f23b23055a4140e0f1076",
+          "filename": "brave-browser-nightly_1.100.37_amd64.deb.sha256",
+          "sha256": "09e15c48e7cbca79e221bbcc233f1b81a0184e73d54a0c02070bbc9011035b50",
+          "sha512": "0da22ca0ceea62fc0196f0c1b54c9d29c7d98241824594f72890e843c6377144acf4b39260cb07bbceb6fb4bfed2938ea174e375a76e9152da14b3d20a3c7a2f",
+          "size": 106,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_amd64.deb.sha256"
+        },
+        "brave-browser-nightly_1.100.37_amd64.deb.sha256.asc": {
+          "blake2b": "cfa500ff81e844988989aacd1366e6caf8f03085ec2b7ef0c872ccc60fc48533cb5fde7e47e89e541359873bbc79e1c54cec9bc1f3784b4fbb9cef739e0e0753",
+          "filename": "brave-browser-nightly_1.100.37_amd64.deb.sha256.asc",
+          "sha256": "5110a358b7f7abc5934ec5dbc3ae9505f257e066ba4e4a263b7c8a75a3f970e2",
+          "sha512": "ca4df2be0ade0b593014ca7e6a84ee8e5ca85c7eb234569d1b72fe25a275d4a8d4a1807b4768ea76517862c8963106593a72de260fb7028acacacac813698e90",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_amd64.deb.sha256.asc"
+        },
+        "brave-browser-nightly_1.100.37_arm64.deb": {
+          "blake2b": "17711dee94c1faa417565d2e7cc341376e572417625ec83fc0619699a8b675026ea67778d13854ffea77f1b02a80654fefa9c00508fa10acc9c44b6a649bd1e8",
+          "filename": "brave-browser-nightly_1.100.37_arm64.deb",
+          "sha256": "d428962115e9a3ba83e145bb015fbb868aa12eaaa014bd8f9c6f97fbe7488f48",
+          "sha512": "d2795f0efea617e558d4bbd0d83da30641d08fda7d937aae74617b78bf6e4501fafdc319ef92c0dd698eba125f415f7cdca78329038a6c083b9f023dd64e1fec",
+          "size": 143437356,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_arm64.deb"
+        },
+        "brave-browser-nightly_1.100.37_arm64.deb.sha256": {
+          "blake2b": "b26bda1b171cef614f928ab235c0e7e5ab24700a8b4644a74206f133d90d7be85249bc96ebf0d73e4e1391ee6d67e79d31ba688eecdd6a9cfc99727525c7d0e9",
+          "filename": "brave-browser-nightly_1.100.37_arm64.deb.sha256",
+          "sha256": "4264f208a2d7ab61eac17f8d2bec2e37b207cd805ecb9dc4882e817200db9760",
+          "sha512": "37313126750669bf1f9124ebe40f91d69cb8f1f60a9b1e0ce2189a1a740d5d721a9186616e0aa79f8fd9547fdff7f22034fec1f3c7e013172e0ca6dd05f3192a",
+          "size": 106,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_arm64.deb.sha256"
+        },
+        "brave-browser-nightly_1.100.37_arm64.deb.sha256.asc": {
+          "blake2b": "0b9482a1932ccacdebb05dbeb6597feadb28ff1f67b7b252b0f1a79115f9a06b7ca50cb2163e3c20457ae9e82e25dbf9bb0d94fafdf873936d4a069e104a2dd2",
+          "filename": "brave-browser-nightly_1.100.37_arm64.deb.sha256.asc",
+          "sha256": "80f8c1a6aa3e7e8f5a86195bbd9462b09fb078414766647adc4c09bf78b502df",
+          "sha512": "1eb76c499053717a5ca02ba3513e63dadecefb63f3db0517c8567f34e92ff39a0769adb32196d97d8f83bd34bf7ff71e8e35c16c30d02f71aae19f6416fd735c",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.100.37/brave-browser-nightly_1.100.37_arm64.deb.sha256.asc"
+        }
+      },
+      "ebuild_rel_path": "www-client/brave-browser-nightly/brave-browser-nightly-1.100.37.ebuild",
+      "final": true,
+      "is_official_signature": true,
+      "payload_sha256": {
+        "brave-browser-nightly_1.100.37_amd64.deb": "a5b3ed7715931f108956516b4b1f746af82d332797f10f8cd8225763fa49261d",
+        "brave-browser-nightly_1.100.37_arm64.deb": "d428962115e9a3ba83e145bb015fbb868aa12eaaa014bd8f9c6f97fbe7488f48"
+      },
+      "pv": "1.100.37",
+      "pvr": "1.100.37",
+      "revision": 0,
+      "signature_key": null,
+      "signature_markers": {
+        "brave-browser-nightly_1.100.37_amd64.deb.sha256": "sha256=09e15c48e7cbca79e221bbcc233f1b81a0184e73d54a0c02070bbc9011035b50;updated_at=2026-10-27T14:01:48Z",
+        "brave-browser-nightly_1.100.37_amd64.deb.sha256.asc": "sha256=5110a358b7f7abc5934ec5dbc3ae9505f257e066ba4e4a263b7c8a75a3f970e2;updated_at=2026-10-27T14:01:52Z",
+        "brave-browser-nightly_1.100.37_arm64.deb.sha256": "sha256=4264f208a2d7ab61eac17f8d2bec2e37b207cd805ecb9dc4882e817200db9760;updated_at=2026-10-27T13:34:12Z",
+        "brave-browser-nightly_1.100.37_arm64.deb.sha256.asc": "sha256=80f8c1a6aa3e7e8f5a86195bbd9462b09fb078414766647adc4c09bf78b502df;updated_at=2026-10-27T13:34:15Z"
+      },
+      "template_vars": {
+        "channel": "nightly",
+        "deb_amd64": "brave-browser-nightly_1.100.37_amd64.deb",
+        "deb_arm64": "brave-browser-nightly_1.100.37_arm64.deb",
+        "pn": "brave-browser-nightly",
+        "product": "brave-browser",
+        "release_tag": "v1.100.37"
+      },
+      "verify_sig_skip_reason": "stream does not use signature verification",
+      "verify_sig_testable": false
+    },
     "1.100.5": {
       "distfiles": {
         "brave-browser-nightly_1.100.5_amd64.deb": {
