@@ -1,0 +1,103 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Gentoo Docker Image
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+    - cron: '0 0 1 */3 *'
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force a rebuild from gentoo/stage3 instead of updating :latest'
+        type: boolean
+        default: false
+        required: false
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  build-image:
+    name: Build or update Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine build strategy
+        id: strategy
+        run: |
+          FORCE="${{ github.event.inputs.force_rebuild }}"
+          SCHEDULE="${{ github.event.schedule }}"
+          if [ "$FORCE" = "true" ] || [ "$SCHEDULE" = "0 0 1 */3 *" ]; then
+            echo "mode=base" >> "$GITHUB_OUTPUT"
+          elif docker manifest inspect "ghcr.io/${{ github.repository }}:latest" >/dev/null 2>&1; then
+            echo "mode=update" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=base" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value={{date 'YYYYMMDD'}}
+
+      - name: Build and push base image
+        if: steps.strategy.outputs.mode == 'base'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.base
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Build and push update image
+        if: steps.strategy.outputs.mode == 'update'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.update
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            REPO_URL=ghcr.io/${{ github.repository }}
+
+  cleanup:
+    name: Delete old image versions
+    needs: build-image
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Delete untagged versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-type: container
+          package-name: ${{ github.event.repository.name }}
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 0
+
+      - name: Delete dated tags beyond the three newest
+        uses: actions/delete-package-versions@v5
+        with:
+          package-type: container
+          package-name: ${{ github.event.repository.name }}
+          min-versions-to-keep: 3
+          ignore-versions: '^latest$'

@@ -1,0 +1,551 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: PR CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'overlay/**'
+      - 'state/**'
+      - 'templates/**'
+      - '.github/workflows/**'
+      - 'docker/**'
+  workflow_dispatch:
+    inputs:
+      stream:
+        description: 'Package stream to test'
+        type: choice
+        default: 'all'
+        required: true
+        options:
+          - 'all'
+          - 'brave-browser'
+          - 'brave-origin'
+          - 'brave-browser-beta'
+          - 'brave-origin-beta'
+          - 'brave-browser-nightly'
+          - 'brave-origin-nightly'
+      log_level:
+        description: 'reap log level'
+        type: choice
+        default: default
+        required: true
+        options:
+          - default
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARNING
+          - ERROR
+          - CRITICAL
+
+env:
+  REAP_LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.log_level != 'default') && inputs.log_level || vars.REAP_LOG_LEVEL }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: write
+
+concurrency:
+  group: reap-pr-ci-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Validate manifests
+    runs-on: ubuntu-latest
+    outputs:
+      run_brave_browser: ${{ steps.ci_detect.outputs.run_brave_browser }}
+      ebuilds_brave_browser: ${{ steps.ci_detect.outputs.ebuilds_brave_browser }}
+      run_brave_origin: ${{ steps.ci_detect.outputs.run_brave_origin }}
+      ebuilds_brave_origin: ${{ steps.ci_detect.outputs.ebuilds_brave_origin }}
+      run_brave_browser_beta: ${{ steps.ci_detect.outputs.run_brave_browser_beta }}
+      ebuilds_brave_browser_beta: ${{ steps.ci_detect.outputs.ebuilds_brave_browser_beta }}
+      run_brave_origin_beta: ${{ steps.ci_detect.outputs.run_brave_origin_beta }}
+      ebuilds_brave_origin_beta: ${{ steps.ci_detect.outputs.ebuilds_brave_origin_beta }}
+      run_brave_browser_nightly: ${{ steps.ci_detect.outputs.run_brave_browser_nightly }}
+      ebuilds_brave_browser_nightly: ${{ steps.ci_detect.outputs.ebuilds_brave_browser_nightly }}
+      run_brave_origin_nightly: ${{ steps.ci_detect.outputs.run_brave_origin_nightly }}
+      ebuilds_brave_origin_nightly: ${{ steps.ci_detect.outputs.ebuilds_brave_origin_nightly }}
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Validate manifests and state
+        run: |
+          reap manifest check --verify-state overlay
+
+      - name: Detect changed ebuilds per stream
+        id: ci_detect
+        run: |
+          reap ci detect --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay"
+
+  test-brave_browser:
+    name: Test www-client/brave-browser
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_browser == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-browser')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-browser" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  test-brave_origin:
+    name: Test www-client/brave-origin
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_origin == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-origin')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-origin" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  test-brave_browser_beta:
+    name: Test www-client/brave-browser-beta
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_browser_beta == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-browser-beta')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-browser-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  test-brave_origin_beta:
+    name: Test www-client/brave-origin-beta
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_origin_beta == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-origin-beta')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-origin-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  test-brave_browser_nightly:
+    name: Test www-client/brave-browser-nightly
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_browser_nightly == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-browser-nightly')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-browser-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  test-brave_origin_nightly:
+    name: Test www-client/brave-origin-nightly
+    needs: prepare
+    if: always() && needs.prepare.result == 'success' && (needs.prepare.outputs.run_brave_origin_nightly == 'true' || github.event.inputs.stream == 'all' || github.event.inputs.stream == 'brave-origin-nightly')
+    runs-on: ubuntu-latest
+    container: ghcr.io/${{ github.repository }}:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Register local overlay in portage
+        run: |
+          mkdir -p /etc/portage/repos.conf
+          cat << 'EOF' > /etc/portage/repos.conf/local-ci.conf
+          [local-ci]
+          location = ${{ github.workspace }}/overlay
+          masters = gentoo
+          auto-sync = no
+          priority = 50
+          EOF
+
+      - name: Test stream ebuilds
+        run: |
+          reap ci test-stream --stream "brave-origin-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+
+  automerge:
+    name: Automerge PR
+    needs:
+      - prepare
+      - test-brave_browser
+      - test-brave_origin
+      - test-brave_browser_beta
+      - test-brave_origin_beta
+      - test-brave_browser_nightly
+      - test-brave_origin_nightly
+    if: always() && github.event_name == 'pull_request' && needs.prepare.result == 'success' && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: reap-badge-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Run automerge
+        id: merge
+        env:
+          GH_TOKEN: ${{ secrets.REAP_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          reap pr automerge --repo "${{ github.repository }}" --pr "${{ github.event.pull_request.number }}" --exclude-check "Automerge PR"
+      - name: Write stream badge
+        id: badge
+        if: >-
+          steps.merge.outputs.badge_state == 'merged' ||
+          steps.merge.outputs.badge_state == 'open_failing' ||
+          steps.merge.outputs.badge_state == 'open_manual'
+        env:
+          BADGE_STATE: ${{ steps.merge.outputs.badge_state }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          id="${HEAD_REF#reap/}"
+          case "$id" in
+            brave-browser) ;;
+            brave-origin) ;;
+            brave-browser-beta) ;;
+            brave-origin-beta) ;;
+            brave-browser-nightly) ;;
+            brave-origin-nightly) ;;
+            *) exit 0 ;;
+          esac
+          reap badge write --kind stream --state "$BADGE_STATE" --label "$id" --output badge.json
+          echo "filename=${id}.json" >> "$GITHUB_OUTPUT"
+      - name: Publish open stream badge
+        if: steps.badge.outputs.filename != ''
+        uses: ./.github/actions/publish-badge
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: badges
+          filename: ${{ steps.badge.outputs.filename }}
+          source: badge.json
+
+  publish-open-failure:
+    name: Publish failing stream badge
+    needs:
+      - prepare
+      - test-brave_browser
+      - test-brave_origin
+      - test-brave_browser_beta
+      - test-brave_origin_beta
+      - test-brave_browser_nightly
+      - test-brave_origin_nightly
+    if: >-
+      always() &&
+      github.event_name == 'pull_request' &&
+      !cancelled() &&
+      (
+        needs.prepare.result == 'failure'
+        || needs.test-brave_browser.result == 'failure'
+        || needs.test-brave_origin.result == 'failure'
+        || needs.test-brave_browser_beta.result == 'failure'
+        || needs.test-brave_origin_beta.result == 'failure'
+        || needs.test-brave_browser_nightly.result == 'failure'
+        || needs.test-brave_origin_nightly.result == 'failure'
+      ) &&
+      (
+        github.event.pull_request.head.ref == 'reap/brave-browser'
+        || github.event.pull_request.head.ref == 'reap/brave-origin'
+        || github.event.pull_request.head.ref == 'reap/brave-browser-beta'
+        || github.event.pull_request.head.ref == 'reap/brave-origin-beta'
+        || github.event.pull_request.head.ref == 'reap/brave-browser-nightly'
+        || github.event.pull_request.head.ref == 'reap/brave-origin-nightly'
+      )
+    runs-on: ubuntu-latest
+    concurrency:
+      group: reap-badge-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Write failing badge
+        id: badge
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          id="${HEAD_REF#reap/}"
+          message="failing"
+          color="red"
+          cat > badge.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "$id",
+            "message": "$message",
+            "color": "$color"
+          }
+          EOF
+          echo "filename=${id}.json" >> "$GITHUB_OUTPUT"
+
+      - name: Publish failing badge
+        uses: ./.github/actions/publish-badge
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: badges
+          filename: ${{ steps.badge.outputs.filename }}
+          source: badge.json

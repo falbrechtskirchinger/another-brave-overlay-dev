@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Notifications
+
+on:
+  workflow_run:
+    workflows:
+      - 'Release Update'
+      - 'PR CI'
+      - 'Sync Overlay'
+      - 'Reference Divergence Check'
+      - 'Gentoo Docker Image'
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Send test notification'
+        type: boolean
+        default: false
+        required: false
+      log_level:
+        description: 'reap log level'
+        type: choice
+        default: default
+        required: true
+        options:
+          - default
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARNING
+          - ERROR
+          - CRITICAL
+
+env:
+  REAP_LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.log_level != 'default') && inputs.log_level || vars.REAP_LOG_LEVEL }}
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  notify:
+    name: Failure notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Send failure notification email
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          REAP_SMTP_HOST: ${{ secrets.REAP_SMTP_HOST }}
+          REAP_SMTP_PORT: ${{ secrets.REAP_SMTP_PORT }}
+          REAP_SMTP_USER: ${{ secrets.REAP_SMTP_USER }}
+          REAP_SMTP_PASSWORD: ${{ secrets.REAP_SMTP_PASSWORD }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.test }}" = "true" ]; then
+            reap notify --test --step-summary
+          else
+            reap notify --from-event --step-summary
+          fi

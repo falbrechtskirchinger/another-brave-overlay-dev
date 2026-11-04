@@ -1,0 +1,74 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: PR Badge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish closed PR badge
+    if: >-
+      github.event.pull_request.head.ref == 'reap/brave-browser'
+      || github.event.pull_request.head.ref == 'reap/brave-origin'
+      || github.event.pull_request.head.ref == 'reap/brave-browser-beta'
+      || github.event.pull_request.head.ref == 'reap/brave-origin-beta'
+      || github.event.pull_request.head.ref == 'reap/brave-browser-nightly'
+      || github.event.pull_request.head.ref == 'reap/brave-origin-nightly'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: reap-badge-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Write merged badge
+        id: badge
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          MERGED: ${{ github.event.pull_request.merged }}
+        run: |
+          if [ "$MERGED" != "true" ]; then
+            exit 0
+          fi
+          id="${HEAD_REF#reap/}"
+          message="OK"
+          color="brightgreen"
+          cat > badge.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "$id",
+            "message": "$message",
+            "color": "$color"
+          }
+          EOF
+          echo "filename=${id}.json" >> "$GITHUB_OUTPUT"
+
+      - name: Publish merged badge
+        if: steps.badge.outputs.filename != ''
+        uses: ./.github/actions/publish-badge
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: badges
+          filename: ${{ steps.badge.outputs.filename }}
+          source: badge.json

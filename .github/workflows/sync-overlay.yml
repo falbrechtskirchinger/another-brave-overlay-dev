@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Sync Overlay
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'overlay/**'
+      - '.github/workflows/sync-overlay.yml'
+      - '.github/actions/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+
+  sync-overlay:
+    name: Sync overlay to dist repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Sync overlay and push
+        uses: ./.github/actions/sync-git-tree
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: main
+          source: overlay

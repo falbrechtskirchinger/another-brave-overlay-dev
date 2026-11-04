@@ -1,0 +1,101 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Release Update
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    inputs:
+      stream:
+        description: 'Package stream to update'
+        type: choice
+        default: 'all'
+        required: true
+        options:
+          - 'all'
+          - 'brave-browser'
+          - 'brave-origin'
+          - 'brave-browser-beta'
+          - 'brave-origin-beta'
+          - 'brave-browser-nightly'
+          - 'brave-origin-nightly'
+      log_level:
+        description: 'reap log level'
+        type: choice
+        default: default
+        required: true
+        options:
+          - default
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARNING
+          - ERROR
+          - CRITICAL
+
+concurrency:
+  group: reap-badge-update
+  cancel-in-progress: false
+
+env:
+  REAP_LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.log_level != 'default') && inputs.log_level || vars.REAP_LOG_LEVEL }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    name: Extract & Update Releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Run reap generate
+        id: generate
+        env:
+          GH_TOKEN: ${{ secrets.REAP_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          STREAM_ARG=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.stream }}" != "all" ]; then
+            STREAM_ARG="--stream ${{ github.event.inputs.stream }}"
+          fi
+          reap generate --mode pr --repo "${{ github.repository }}" --step-summary $STREAM_ARG
+      - name: Write update badge
+        if: always()
+        run: |
+          reap badge write --kind workflow --conclusion "${{ steps.generate.outcome }}" --label "Fetch new releases" --output badge.json
+      - name: Publish update badge
+        if: always()
+        uses: ./.github/actions/publish-badge
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: badges
+          filename: update.json
+          source: badge.json

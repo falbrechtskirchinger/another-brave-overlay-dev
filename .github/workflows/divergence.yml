@@ -1,0 +1,94 @@
+# SPDX-FileCopyrightText: 2026 Florian Albrechtskirchinger <falbrechtskirchinger@gmail.com>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Reference Divergence Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'references/www-client/**'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      log_level:
+        description: 'reap log level'
+        type: choice
+        default: default
+        required: true
+        options:
+          - default
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARNING
+          - ERROR
+          - CRITICAL
+
+concurrency:
+  group: reap-badge-divergence
+  cancel-in-progress: false
+
+env:
+  REAP_LOG_LEVEL: ${{ (github.event_name == 'workflow_dispatch' && inputs.log_level != 'default') && inputs.log_level || vars.REAP_LOG_LEVEL }}
+
+permissions:
+  contents: read
+
+jobs:
+  check-divergence:
+    name: Check Gentoo reference divergence
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Checkout reap
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/reap-private
+          ref: main
+          ssh-key: ${{ secrets.REAP_DEPLOY_KEY }}
+          path: reap-src
+          persist-credentials: false
+      - name: Link reap actions
+        run: reap-src/ci/bootstrap.sh
+      - name: Setup reap
+        uses: ./.github/actions/setup-reap
+        with:
+          source: reap-src
+
+      - name: Fetch pipeline
+        env:
+          REAP_CONFIG_REPO: another-brave-overlay-dev-private
+          REAP_CONFIG_DEPLOY_KEY: ${{ secrets.REAP_CONFIG_DEPLOY_KEY }}
+        run: reap-src/ci/bootstrap.sh
+
+      - name: Restore git mirrors cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/reap/git-mirrors
+          key: reap-git-mirrors-${{ github.run_id }}
+          restore-keys: |
+            reap-git-mirrors-
+
+      - name: Run divergence check
+        id: check
+        run: |
+          reap divergence check --show-diff --step-summary
+      - name: Write divergence badge
+        if: always()
+        run: |
+          reap badge write --kind divergence --diverged "${{ steps.check.outputs.diverged }}" --label "Reference ebuild drift" --output badge.json
+      - name: Publish divergence badge
+        if: always()
+        uses: ./.github/actions/publish-badge
+        with:
+          deploy-key: ${{ secrets.OVERLAY_SYNC_DEPLOY_KEY }}
+          repo: git@github.com:${{ github.repository_owner }}/another-brave-overlay-testing.git
+          branch: badges
+          filename: divergence.json
+          source: badge.json
