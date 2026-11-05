@@ -82,7 +82,7 @@ jobs:
       - name: Write divergence badge
         if: always()
         run: |
-          reap badge write --kind divergence --diverged "${{ steps.check.outputs.diverged }}" --label "Reference ebuild drift" --output badge.json
+          reap badge write --kind divergence --diverged "${{ steps.check.outputs.diverged }}" --label "Reference ebuilds" --output badge.json
       - name: Publish divergence badge
         if: always()
         uses: ./.github/actions/publish-badge
