@@ -47,10 +47,11 @@ S="${WORKDIR}"
 
 LICENSE="MPL-2.0"
 SLOT="0"
-case ${BRAVE_CHANNEL} in
-	stable) KEYWORDS="-* amd64 arm64" ;;
-	*) KEYWORDS="-* ~amd64 ~arm64" ;;
-esac
+{% if channel == "stable" %}
+KEYWORDS="-* amd64 arm64"
+{% else %}
+KEYWORDS="-* ~amd64 ~arm64"
+{% endif %}
 IUSE="qt6"
 RESTRICT="bindist mirror strip"
 {% if restrict_verify_sig_fetch %}
