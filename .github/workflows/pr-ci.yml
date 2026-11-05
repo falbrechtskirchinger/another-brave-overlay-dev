@@ -51,6 +51,7 @@ permissions:
   contents: write
   pull-requests: write
   checks: write
+  packages: read
 
 concurrency:
   group: reap-pr-ci-${{ github.event.pull_request.number || github.run_id }}
