@@ -156,7 +156,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-browser" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-browser" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   test-brave_origin:
     name: Test www-client/brave-origin
@@ -204,7 +204,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-origin" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-origin" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   test-brave_browser_beta:
     name: Test www-client/brave-browser-beta
@@ -252,7 +252,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-browser-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-browser-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   test-brave_origin_beta:
     name: Test www-client/brave-origin-beta
@@ -300,7 +300,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-origin-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-origin-beta" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   test-brave_browser_nightly:
     name: Test www-client/brave-browser-nightly
@@ -348,7 +348,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-browser-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-browser-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   test-brave_origin_nightly:
     name: Test www-client/brave-origin-nightly
@@ -396,7 +396,7 @@ jobs:
 
       - name: Test stream ebuilds
         run: |
-          reap ci test-stream --stream "brave-origin-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary
+          reap ci test-stream --stream "brave-origin-nightly" --mode diff --base-ref "${{ github.event.pull_request.base.sha || 'HEAD~1' }}" --head-ref "${{ github.event.pull_request.head.sha || 'HEAD' }}" --overlay-dir "overlay" --step-summary --no-install-deps
 
   automerge:
     name: Automerge PR
