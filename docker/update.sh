@@ -11,6 +11,8 @@ emerge --update --deep --newuse -v @world
 
 mkdir -p /etc/portage/package.accept_keywords
 cat > /etc/portage/package.accept_keywords/ci <<EOF
+dev-lang/python:3.15 ~amd64
 www-client/google-chrome-unstable ~amd64
 EOF
+emerge --update -v dev-lang/python:3.15
 emerge --onlydeps -v www-client/google-chrome-unstable
