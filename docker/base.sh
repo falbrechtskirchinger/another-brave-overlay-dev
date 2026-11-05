@@ -20,6 +20,9 @@ priority = 9999
 sync-uri = https://distfiles.gentoo.org/releases/amd64/binpackages/23.0/x86-64/
 EOF
 
+mkdir -p /etc/portage/repos.conf
+cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
+
 # Match binhost USE flags
 cat <<EOF >>/etc/portage/package.use/use
 media-libs/mesa vulkan wayland
