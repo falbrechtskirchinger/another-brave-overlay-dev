@@ -14,12 +14,14 @@ another-brave-overlay-testing
 
 This Gentoo overlay provides automatically generated ebuilds for the [Brave Browser](https://brave.com/), a privacy-focused, open-source web browser based on Chromium, and [Brave Origin](https://brave.com/origin/), a streamlined version of Brave Browser. The ebuilds are based on several official Gentoo ebuilds for other Chromium-based browsers, which are routinely checked for divergence, and adapted to deliver the stable, beta, and nightly versions of Brave Browser and Brave Origin via the following ebuilds:
 
-- `www-client/brave-browser` (stable) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser.json&style=flat-square&logo=github)
-- `www-client/brave-browser-beta` (beta) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser-beta.json&style=flat-square&logo=github)
-- `www-client/brave-browser-nightly` (nightly) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser-nightly.json&style=flat-square&logo=github)
-- `www-client/brave-origin` (stable) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin.json&style=flat-square&logo=github)
-- `www-client/brave-origin-beta` (beta) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin-beta.json&style=flat-square&logo=github)
-- `www-client/brave-origin-nightly` (nightly) ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin-nightly.json&style=flat-square&logo=github)
+| **Package**                        | **Channel** | **Status** |
+| :---                               | :---        | :--- |
+| `www-client/brave-browser`         | stable      | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser.json&style=flat-square&logo=github) |
+| `www-client/brave-browser-beta`    | beta        | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser-beta.json&style=flat-square&logo=github) |
+| `www-client/brave-browser-nightly` | nightly     | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-browser-nightly.json&style=flat-square&logo=github) |
+| `www-client/brave-origin`          | stable      | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin.json&style=flat-square&logo=github) |
+| `www-client/brave-origin-beta`     | beta        | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin-beta.json&style=flat-square&logo=github) |
+| `www-client/brave-origin-nightly`  | nightly     | ![](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffalbrechtskirchinger%2Fanother-brave-overlay-testing%2Fbadges%2Fbrave-origin-nightly.json&style=flat-square&logo=github) |
 
 These ebuilds install pre-built binary versions.
 
