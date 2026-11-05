@@ -6,7 +6,7 @@
 set -eu
 
 emaint sync -a >/dev/null
-emerge --update -v llvm-core/llvm llvm-core/clang dev-util/pkgcheck
+emerge --update -v dev-vcs/git dev-util/pkgcheck net-misc/openssh llvm-core/llvm llvm-core/clang
 emerge --update --deep --newuse -v @world
 
 mkdir -p /etc/portage/package.accept_keywords

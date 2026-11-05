@@ -32,7 +32,7 @@ emerge --update --oneshot -v app-portage/getuto
 getuto
 
 emerge --update --deep --newuse -v @world
-emerge --update -v llvm-core/llvm llvm-core/clang dev-util/pkgcheck
+emerge --update -v dev-vcs/git dev-util/pkgcheck net-misc/openssh llvm-core/llvm llvm-core/clang
 
 mkdir -p /etc/portage/package.accept_keywords
 cat > /etc/portage/package.accept_keywords/ci <<EOF
