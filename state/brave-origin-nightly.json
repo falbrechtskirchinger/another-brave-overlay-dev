@@ -240,6 +240,85 @@
       },
       "verify_sig_skip_reason": "stream does not use signature verification",
       "verify_sig_testable": false
+    },
+    "1.101.32": {
+      "distfiles": {
+        "brave-origin-nightly_1.101.32_amd64.deb": {
+          "blake2b": "def22ef046368159204b5a36157cb8c2e6dab0a3396c39345062f4a65f296810d9a08ee1562111b0f2ed25d65be6d77ecb3fdaaca0a4dbe1b2e5536a160f2d5c",
+          "filename": "brave-origin-nightly_1.101.32_amd64.deb",
+          "sha256": "13cf2d25e3995c96a23cf048cae5a7d7be6566e02623b67e408a24b96e136cc0",
+          "sha512": "3b58bf78b038435123c9b8a9785ffb1dd2054076e4771a6c5a0508b7223a80738888074e94405ed7d2c1d630b8a9b5dc79533cfeda951da74927033fd083405c",
+          "size": 138536604,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_amd64.deb"
+        },
+        "brave-origin-nightly_1.101.32_amd64.deb.sha256": {
+          "blake2b": "a319c72de7780c04bd59c53cce3e9573b239f932bc68455f6ccbe8731c78ffb8a8a4ddf8c74007e3c2893e77b9af58648aa9cdfeaeff0da793de2a337946c963",
+          "filename": "brave-origin-nightly_1.101.32_amd64.deb.sha256",
+          "sha256": "633d6f784431be02776ad06bd58154183cf8746c820c9feb4a6b6e80cdca1629",
+          "sha512": "5afa561cb3a9658b0b2c381477c76481c587a2ed9ef0e87dee010c6dfd417683de57b7aae921f0d82670e8788fd19fad6c64e79538b08ff3da1d86c17a0167e0",
+          "size": 105,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_amd64.deb.sha256"
+        },
+        "brave-origin-nightly_1.101.32_amd64.deb.sha256.asc": {
+          "blake2b": "f55f910a20da896607340bff0397343ae00e213fcb22ebf31e180350f3e16894fb88e11fd84d1660046dfc420fdb5484638e8c1cd0007c9ef71aa83e08915301",
+          "filename": "brave-origin-nightly_1.101.32_amd64.deb.sha256.asc",
+          "sha256": "cc395f507bd3e108eccb5970814079378157013eec68fae493df76a3b770b6c3",
+          "sha512": "3ff9968b25f72d50ecef485b0ea18319d57e7592f9e99602ccd60fc99d0704eb61ad33734b66f8eed149e840fd31323296bfafb74789fdf811a1a365062c1ce1",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_amd64.deb.sha256.asc"
+        },
+        "brave-origin-nightly_1.101.32_arm64.deb": {
+          "blake2b": "cf8109b8f66eaaae83f7e283425f94a5575e37cf3173026c8539a7878b9d4eed52421c0c22dce663dd9aa85562f49e6ac7c4310d770acbaef326e1243809edcf",
+          "filename": "brave-origin-nightly_1.101.32_arm64.deb",
+          "sha256": "4c0eb4779ed339b5c7867020b9b29db2e36d7ea8498028f3baed2c4f7c95d8f7",
+          "sha512": "ff48b28c5666262dabd8c6682743fc363830db6bfb9d0d0b458c8c8e80a5f0732690746391fd72ccb28119e1f9c6af3f29e02048bebe8214fa565275d2cdcda6",
+          "size": 130224008,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_arm64.deb"
+        },
+        "brave-origin-nightly_1.101.32_arm64.deb.sha256": {
+          "blake2b": "714fbb1f39bb257ca69745ee3bec7804b1e64691bd912b68552c56db87041aea215f749f2ab9b0162bd0b4e3f36ab863492b234788b26dbcb9775075993d03c8",
+          "filename": "brave-origin-nightly_1.101.32_arm64.deb.sha256",
+          "sha256": "2acea55c1030030ccfa6a38d36415ee8c0eb91d82dd27b1745157a7766543198",
+          "sha512": "4c94fe86a56edb2bbcb915638e045f1e2e20d96049d0f12bcb77524001b61529d39f17430c60260e354622fd3a033afe54bf2fd1ce89c2dbfd0230b7107cf778",
+          "size": 105,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_arm64.deb.sha256"
+        },
+        "brave-origin-nightly_1.101.32_arm64.deb.sha256.asc": {
+          "blake2b": "51f5482fe1876a25d3ce5c3b5b4e06d60d9da103fb2d163af244bbbd9c4c62ca9cc11c87d8de3df65be7d4f36f08a28b75e2932ba450be72e72b5afc9e58a14f",
+          "filename": "brave-origin-nightly_1.101.32_arm64.deb.sha256.asc",
+          "sha256": "36c06f63f83fe397947d5f1f702c13b0b4c150c2d57b342cfac1ec485c987631",
+          "sha512": "59c5539417eaea6bb5abb998a8b687db2d3b62fbb0c56da6ef64ae15e459fd14ccdda7c33124606fa65b62d9c6c69baa1d0529223e34bb2e41640f097bd64ce6",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.32/brave-origin-nightly_1.101.32_arm64.deb.sha256.asc"
+        }
+      },
+      "ebuild_rel_path": "www-client/brave-origin-nightly/brave-origin-nightly-1.101.32.ebuild",
+      "final": true,
+      "is_official_signature": true,
+      "payload_sha256": {
+        "brave-origin-nightly_1.101.32_amd64.deb": "13cf2d25e3995c96a23cf048cae5a7d7be6566e02623b67e408a24b96e136cc0",
+        "brave-origin-nightly_1.101.32_arm64.deb": "4c0eb4779ed339b5c7867020b9b29db2e36d7ea8498028f3baed2c4f7c95d8f7"
+      },
+      "pv": "1.101.32",
+      "pvr": "1.101.32",
+      "revision": 0,
+      "signature_key": null,
+      "signature_markers": {
+        "brave-origin-nightly_1.101.32_amd64.deb.sha256": "sha256=633d6f784431be02776ad06bd58154183cf8746c820c9feb4a6b6e80cdca1629;updated_at=2026-11-06T13:44:05Z",
+        "brave-origin-nightly_1.101.32_amd64.deb.sha256.asc": "sha256=cc395f507bd3e108eccb5970814079378157013eec68fae493df76a3b770b6c3;updated_at=2026-11-06T13:44:09Z",
+        "brave-origin-nightly_1.101.32_arm64.deb.sha256": "sha256=2acea55c1030030ccfa6a38d36415ee8c0eb91d82dd27b1745157a7766543198;updated_at=2026-11-06T13:25:51Z",
+        "brave-origin-nightly_1.101.32_arm64.deb.sha256.asc": "sha256=36c06f63f83fe397947d5f1f702c13b0b4c150c2d57b342cfac1ec485c987631;updated_at=2026-11-06T13:25:55Z"
+      },
+      "template_vars": {
+        "channel": "nightly",
+        "deb_amd64": "brave-origin-nightly_1.101.32_amd64.deb",
+        "deb_arm64": "brave-origin-nightly_1.101.32_arm64.deb",
+        "pn": "brave-origin-nightly",
+        "product": "brave-origin",
+        "release_tag": "v1.101.32"
+      },
+      "verify_sig_skip_reason": "stream does not use signature verification",
+      "verify_sig_testable": false
     }
   }
 }
