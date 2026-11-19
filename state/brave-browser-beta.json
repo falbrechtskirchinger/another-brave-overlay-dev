@@ -240,6 +240,85 @@
       },
       "verify_sig_skip_reason": "stream does not use signature verification",
       "verify_sig_testable": false
+    },
+    "1.101.52": {
+      "distfiles": {
+        "brave-browser-beta_1.101.52_amd64.deb": {
+          "blake2b": "d469507cc74298f4e3bd8b6f4a1481a1c55abaed30e245a52fbaf69e3c5cc14977ec90db6c4e7fddc55f0f4bde13e5ea84f631b19e009987dfd25c43b124d5ca",
+          "filename": "brave-browser-beta_1.101.52_amd64.deb",
+          "sha256": "36f119829f08b70f22b6f3357fe396bd9f65b17fba4723956055084880698e16",
+          "sha512": "22e51bd5b83df94f1236fbfae779ae038e83ec91db501f22bdf8776b6148313b20e6eef8454d3a01c11b6a2df5e70df908d97bbb3bd43544ad93c3e1b199a0d3",
+          "size": 161342496,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_amd64.deb"
+        },
+        "brave-browser-beta_1.101.52_amd64.deb.sha256": {
+          "blake2b": "ce256bc0382c425c7490ab3b0dd8864f42f163627eeb9d881a4f3a0ab79cf737408942ac3b6a675dfcb05fffc3d5087be090f150bbbdd0048d18e45f069bdf29",
+          "filename": "brave-browser-beta_1.101.52_amd64.deb.sha256",
+          "sha256": "8713e809c8efdbc6090b363a2048edb423a038dd92b9e5d7bfacefe36500a1c0",
+          "sha512": "7ad2ff24fe81c1d38b8a41db2ce85f125d56aead937ee8a2c9efa72214d39861b1639064f53648733e51d3f1ed9ef702c16b84ad4b2210bdde661091c04d461e",
+          "size": 103,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_amd64.deb.sha256"
+        },
+        "brave-browser-beta_1.101.52_amd64.deb.sha256.asc": {
+          "blake2b": "01a1665b250638bc106338e30a8a307cdef30c0b65808ad88beb26f301ac55ce28335a6d3dc95490dcd48541fa7b0b3902049be0b8fe6154ccab81671f642655",
+          "filename": "brave-browser-beta_1.101.52_amd64.deb.sha256.asc",
+          "sha256": "faad121b87503ff2f6da26278976db7dc122bac4821aa102ce33722589fe4691",
+          "sha512": "6add906a1f993d89e26263ebb493a68ae33aeec1cdecd38739eceb76aad96c78a5f3f10508a71715eb41669e875fe2b6a5c443d6b9aa83e0e1ad07860e39a1f4",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_amd64.deb.sha256.asc"
+        },
+        "brave-browser-beta_1.101.52_arm64.deb": {
+          "blake2b": "7fa4d8334e991cacf9fb7ba8f6e7e4ac5a52714d84de0a16a61bffac8e2a294509da99d686a8a37b24c098bd8ce367fa817b689e3e3731b6c1debe2af56680a6",
+          "filename": "brave-browser-beta_1.101.52_arm64.deb",
+          "sha256": "cd08afd1c3535245b353d92d5e950dcb33b244b1181d4be81639b2b77d047d6b",
+          "sha512": "853ede7c8fd34730b3903d84d7a4974aee1af10286b8883761f46a982381d3cdddfdc16d70c0aab59f371d8abc97c674c2f29f9e032dcc105f3b2ba39de44678",
+          "size": 149304724,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_arm64.deb"
+        },
+        "brave-browser-beta_1.101.52_arm64.deb.sha256": {
+          "blake2b": "9158c96e1ca39c6e22e3b0b64d2708f358b9603efcbf9f2b99c97cf270a5184835040a3edb8cd5046eacefd7dc8c00a76ab61784f6ee3e1413e1bc3e7785c4c2",
+          "filename": "brave-browser-beta_1.101.52_arm64.deb.sha256",
+          "sha256": "60831741cd29c899b26738183d0a2d813b22707c3daf85c7040566fb2b18ee26",
+          "sha512": "14c571d5544107ec8ff2e38dab115e1c63904b8f10d18390b0c4c962fd7b0aafb4f0b212651d4680ae211c03dd7180563b69c79b2b7ab53dd1b23d75d1493acd",
+          "size": 103,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_arm64.deb.sha256"
+        },
+        "brave-browser-beta_1.101.52_arm64.deb.sha256.asc": {
+          "blake2b": "5ac18b93ba78f401abbb4b3067817e342c6b991140987cf38f6c2584fa1203cc7dabc918089b4a56bb6e558f7b1c17404fa4776a58a25e21f47606d8699800a4",
+          "filename": "brave-browser-beta_1.101.52_arm64.deb.sha256.asc",
+          "sha256": "9ec8b5232dbc53da7e75e7d4656c43a8dff8d8b8ee7b381316cdcfa73afdae52",
+          "sha512": "ddac9737829a710c27e722cf6b7cf89daa6a66267284090be08ef26834b157c226fb7fda87c1abb68184f6c699b831bc8cd3ac3449bf6c58c0a718fbb720c918",
+          "size": 833,
+          "url": "https://github.com/brave/brave-browser/releases/download/v1.101.52/brave-browser-beta_1.101.52_arm64.deb.sha256.asc"
+        }
+      },
+      "ebuild_rel_path": "www-client/brave-browser-beta/brave-browser-beta-1.101.52.ebuild",
+      "final": true,
+      "is_official_signature": true,
+      "payload_sha256": {
+        "brave-browser-beta_1.101.52_amd64.deb": "36f119829f08b70f22b6f3357fe396bd9f65b17fba4723956055084880698e16",
+        "brave-browser-beta_1.101.52_arm64.deb": "cd08afd1c3535245b353d92d5e950dcb33b244b1181d4be81639b2b77d047d6b"
+      },
+      "pv": "1.101.52",
+      "pvr": "1.101.52",
+      "revision": 0,
+      "signature_key": null,
+      "signature_markers": {
+        "brave-browser-beta_1.101.52_amd64.deb.sha256": "sha256=8713e809c8efdbc6090b363a2048edb423a038dd92b9e5d7bfacefe36500a1c0;updated_at=2026-11-19T05:49:22Z",
+        "brave-browser-beta_1.101.52_amd64.deb.sha256.asc": "sha256=faad121b87503ff2f6da26278976db7dc122bac4821aa102ce33722589fe4691;updated_at=2026-11-19T05:49:25Z",
+        "brave-browser-beta_1.101.52_arm64.deb.sha256": "sha256=60831741cd29c899b26738183d0a2d813b22707c3daf85c7040566fb2b18ee26;updated_at=2026-11-19T05:27:32Z",
+        "brave-browser-beta_1.101.52_arm64.deb.sha256.asc": "sha256=9ec8b5232dbc53da7e75e7d4656c43a8dff8d8b8ee7b381316cdcfa73afdae52;updated_at=2026-11-19T05:27:34Z"
+      },
+      "template_vars": {
+        "channel": "beta",
+        "deb_amd64": "brave-browser-beta_1.101.52_amd64.deb",
+        "deb_arm64": "brave-browser-beta_1.101.52_arm64.deb",
+        "pn": "brave-browser-beta",
+        "product": "brave-browser",
+        "release_tag": "v1.101.52"
+      },
+      "verify_sig_skip_reason": "stream does not use signature verification",
+      "verify_sig_testable": false
     }
   }
 }
